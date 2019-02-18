@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 import 'tachyons';
-import App from './App';
+import App from './components/App';
 
 ReactDOM.render(
     <App /> //Abstracting out everything into App being the top most node.
