@@ -1,0 +1,10 @@
+@font-face{
+    font-family: 'geosteam';
+    src: url('fonts/geosteam.ttf')
+}
+
+h1{
+    font-family: 'geosteam';
+    font-weight: 200;
+    color: #00FF00;
+}
