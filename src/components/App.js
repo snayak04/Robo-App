@@ -5,22 +5,39 @@ import './App.css';
 import Loading from '../modules/Loading';
 import Scroll from '../modules/Scroll';
 import ErrorBoundary from './ErrorBoudary';
+import {setSearchField} from '../actions';
+import {connect} from 'react-redux';
 
+/*
+Redux: 
+1. import the actions.
+2. import connect from react-redux and export along with the class like export defualt connect(mapStateToProps, mapDispatchToProps)(ClassName)
+3.  Tell what state it should listen to from the reducers in the mapStateToProps
+*/
+const mapStateToProps = (state) =>{
+    return { searchField: state.searchField}  //TODO:: But searchRobots take parameter of state =>?? When are we passing that here"?
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return { onSearch: (event) => {
+        dispatch(setSearchField(event.target.value));
+    }}; 
+}
 class App extends Component{ 
     constructor(){
         super();
-        this.state = {
+         this.state = {
             robots: [],
-            searchField: ""
         }
     };
 
+  
 /*Any custom function in JSX has to follow the arrow funcitons *
-@updated this.searchField value*/
-    onSearch = (event) => {
-        //setting state:
-        this.setState({ searchField: event.target.value});
-    };
+@updated this.sea rchField value*/
+    // onSearch = (event) => {
+    //     //setting state:
+    //     this.setState({ searchField: event.target.value});
+    // };
     
     /*
     The cycle is:
@@ -31,6 +48,8 @@ class App extends Component{
     if componenetDidMount() then render() aagain.
     */
     componentDidMount(){
+
+        console.log(this.props.store);
         //Using API to getch response.
         fetch('https://jsonplaceholder.typicode.com/users')
         .then(response => response.json())
@@ -39,8 +58,9 @@ class App extends Component{
     }
 
     render(){
+        const {searchField, onSearch} = this.props;
         var filteredRobots = this.state.robots.filter(robot => {
-            return robot.name.toLocaleLowerCase().includes(this.state.searchField.toLocaleLowerCase());
+            return robot.name.toLocaleLowerCase().includes(searchField.toLocaleLowerCase());
         });
         if(!this.state.robots.length){
             return <Loading />
@@ -48,7 +68,7 @@ class App extends Component{
         return(
             <div className="tc">
                 <h1 className="f1">Robo App</h1>
-                <SearchBox searchChange={this.onSearch} />
+                <SearchBox searchChange={onSearch} />
                 <Scroll>
                     <ErrorBoundary>
                         { <CardList robots={filteredRobots}/> /*Abstracting Cards into CardList with CardList being the parent, and Cards its child. */ }
@@ -59,5 +79,5 @@ class App extends Component{
         }
     }
 }
-
-export default App;
+// Connect is a higher order function...
+export default connect(mapStateToProps, mapDispatchToProps)(App);
